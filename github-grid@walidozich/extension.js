@@ -10,6 +10,15 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 const DECODER = new TextDecoder();
+const USERNAME_PATTERN = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
+
+function normalizeUsername(username) {
+    return username.trim();
+}
+
+function isValidUsername(username) {
+    return USERNAME_PATTERN.test(username);
+}
 
 function buildContributionsUrl(username) {
     const today = GLib.DateTime.new_now_utc();
@@ -69,6 +78,9 @@ class GithubGridIndicator extends PanelMenu.Button {
         super._init(0.0, 'GitHub Grid');
         this._settings = settings;
         this._session = session;
+        this._refreshSourceId = null;
+        this._settingsSignals = [];
+        this._isRefreshing = false;
 
         const panelLabel = new St.Label({
             text: 'GH',
@@ -119,20 +131,90 @@ class GithubGridIndicator extends PanelMenu.Button {
         popupItem.add_child(this._content);
         this.menu.addMenuItem(popupItem);
 
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+        this._refreshItem = new PopupMenu.PopupMenuItem('Refresh now');
+        this._refreshItem.connect('activate', () => {
+            void this.refresh();
+        });
+        this.menu.addMenuItem(this._refreshItem);
+
+        this._settingsSignals.push(
+            this._settings.connect('changed::username', () => {
+                void this.refresh();
+            })
+        );
+        this._settingsSignals.push(
+            this._settings.connect('changed::refresh-interval-minutes', () => {
+                this.startAutoRefresh();
+            })
+        );
+
         this.showLoadingState();
     }
 
-    async loadContributions() {
-        const username = this._settings.get_string('username').trim();
-        this.showLoadingState(username);
+    async refresh() {
+        if (this._isRefreshing)
+            return;
 
-        const result = await fetchContributions(this._session, username);
-        if (result.days.length === 0) {
-            this.showEmptyState(username);
+        const username = normalizeUsername(this._settings.get_string('username'));
+        if (!username) {
+            this.showEmptyState();
             return;
         }
 
-        this.showLoadedState(username, result);
+        if (!isValidUsername(username)) {
+            this.showErrorState(
+                `Invalid GitHub username: ${username}`,
+                'Use only letters, numbers, and single hyphens between characters.'
+            );
+            return;
+        }
+
+        this._isRefreshing = true;
+        this._refreshItem.setSensitive(false);
+        this.showLoadingState(username);
+
+        try {
+            const result = await fetchContributions(this._session, username);
+            if (result.days.length === 0) {
+                this.showEmptyState(username);
+                return;
+            }
+
+            this.showLoadedState(username, result);
+        } catch (error) {
+            this.showErrorState(
+                `Unable to load @${username}.`,
+                error.message
+            );
+        } finally {
+            this._refreshItem.setSensitive(true);
+            this._isRefreshing = false;
+        }
+    }
+
+    startAutoRefresh() {
+        this.stopAutoRefresh();
+
+        const minutes = Math.max(5, this._settings.get_int('refresh-interval-minutes'));
+        this._refreshSourceId = GLib.timeout_add_seconds(
+            GLib.PRIORITY_DEFAULT,
+            minutes * 60,
+            () => {
+                void this.refresh();
+                return GLib.SOURCE_CONTINUE;
+            }
+        );
+
+        GLib.Source.set_name_by_id(this._refreshSourceId, '[github-grid] auto-refresh');
+    }
+
+    stopAutoRefresh() {
+        if (this._refreshSourceId !== null) {
+            GLib.Source.remove(this._refreshSourceId);
+            this._refreshSourceId = null;
+        }
     }
 
     showLoadingState(username = '') {
@@ -173,6 +255,16 @@ class GithubGridIndicator extends PanelMenu.Button {
         this._hintLabel.text = hintText;
         this._summaryLabel.text = '';
     }
+
+    destroy() {
+        this.stopAutoRefresh();
+
+        for (const signalId of this._settingsSignals)
+            this._settings.disconnect(signalId);
+
+        this._settingsSignals = [];
+        super.destroy();
+    }
 });
 
 let indicator = null;
@@ -183,12 +275,8 @@ export default class GithubGridExtension extends Extension {
         session = new Soup.Session();
         indicator = new GithubGridIndicator(this.getSettings(), session);
         Main.panel.addToStatusArea('github-grid', indicator);
-        void indicator.loadContributions().catch(error => {
-            indicator.showErrorState(
-                'Unable to load contribution data.',
-                error.message
-            );
-        });
+        indicator.startAutoRefresh();
+        void indicator.refresh();
     }
 
     disable() {

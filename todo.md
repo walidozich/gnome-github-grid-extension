@@ -33,10 +33,10 @@
 - [x] Choose the data source:
   GraphQL API or public profile parsing.
 - [x] Define the fetch function.
-- [ ] Add username validation.
-- [ ] Add network error handling.
-- [ ] Add refresh logic.
-- [ ] Add manual refresh support.
+- [x] Add username validation.
+- [x] Add network error handling.
+- [x] Add refresh logic.
+- [x] Add manual refresh support.
 
 ## Grid Rendering
 
