@@ -1,1 +1,3 @@
 github-grid@walidozich/schemas/gschemas.compiled
+dist/
+*.shell-extension.zip
