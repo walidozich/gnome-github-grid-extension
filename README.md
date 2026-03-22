@@ -139,6 +139,14 @@ Diagnosis so far:
 - The installed files and `metadata.json` are present in `~/.local/share/gnome-shell/extensions/github-grid@walidozich`
 - On Wayland, GNOME Shell can require a session restart before a newly added UUID is enumerated by the shell-side extension service
 
+Executed in the live GNOME session after packaging fixes:
+
+- `gnome-extensions info github-grid@walidozich` reports `State: ACTIVE`
+- the extension stayed `ACTIVE` after setting `username='bad--name'`
+- the extension stayed `ACTIVE` after restoring `username='octocat'`
+- the extension stayed `ACTIVE` after lowering `refresh-interval-minutes` to `5`
+- no fresh GNOME Shell log errors were emitted for the extension during those settings-driven checks
+
 ## Manual Runtime Testing
 
 The live GNOME test matrix is documented in `tests/manual-runtime-checklist.md`. That checklist covers valid and invalid usernames, offline behavior, API failure behavior, refresh flow, and popup layout checks inside an actual GNOME Shell session.
