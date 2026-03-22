@@ -103,7 +103,14 @@ Executed locally:
 Compatibility note:
 
 - The extension metadata now declares support for GNOME Shell `46` and `49`
-- `gnome-extensions info github-grid@walidozich` still did not enumerate the UUID from this CLI context after direct copy and bundle install, so live runtime checks remain manual
+- `gnome-extensions info github-grid@walidozich` still did not enumerate the UUID from this CLI context after direct copy and bundle install, which points to session-side discovery state rather than a simple missing file
+
+Diagnosis so far:
+
+- The original metadata was incompatible with this machine because the shell is `49.4` and the extension initially declared only `46`
+- The CLI now works normally for other extensions and the bundle packs successfully
+- The installed files and `metadata.json` are present in `~/.local/share/gnome-shell/extensions/github-grid@walidozich`
+- On Wayland, GNOME Shell can require a session restart before a newly added UUID is enumerated by the shell-side extension service
 
 ## Manual Runtime Testing
 
