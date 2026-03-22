@@ -108,6 +108,29 @@ async function fetchContributions(session, username) {
     return {days, total, maxCount};
 }
 
+function serializeCachedResult(username, result) {
+    return JSON.stringify({
+        username,
+        result,
+        cachedAt: GLib.DateTime.new_now_utc().format('%Y-%m-%dT%H:%M:%SZ'),
+    });
+}
+
+function parseCachedResult(rawValue) {
+    if (!rawValue)
+        return null;
+
+    try {
+        const parsed = JSON.parse(rawValue);
+        if (!parsed?.username || !parsed?.result?.days)
+            return null;
+
+        return parsed;
+    } catch {
+        return null;
+    }
+}
+
 const GithubGridIndicator = GObject.registerClass(
 class GithubGridIndicator extends PanelMenu.Button {
     _init(settings, session) {
@@ -231,6 +254,10 @@ class GithubGridIndicator extends PanelMenu.Button {
                 return;
             }
 
+            this._settings.set_string(
+                'cached-result',
+                serializeCachedResult(username, result)
+            );
             this.showLoadedState(username, result);
         } catch (error) {
             this.showErrorState(
@@ -291,6 +318,16 @@ class GithubGridIndicator extends PanelMenu.Button {
             'Public contributions from the last year.'
         );
         this._summaryLabel.text = `Total contributions: ${result.total} | Peak day: ${result.maxCount}`;
+    }
+
+    restoreCachedState() {
+        const cached = parseCachedResult(this._settings.get_string('cached-result'));
+        if (!cached)
+            return false;
+
+        this.showLoadedState(cached.username, cached.result);
+        this._hintLabel.text = `Showing cached data from ${cached.cachedAt} until refresh completes.`;
+        return true;
     }
 
     showErrorState(message = 'Unable to load contribution data.', hint = 'Check the username or network access.') {
@@ -380,6 +417,7 @@ export default class GithubGridExtension extends Extension {
         indicator = new GithubGridIndicator(this.getSettings(), session);
         Main.panel.addToStatusArea('github-grid', indicator);
         indicator.startAutoRefresh();
+        indicator.restoreCachedState();
         void indicator.refresh();
     }
 

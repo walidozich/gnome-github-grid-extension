@@ -17,5 +17,10 @@
       <summary>GitHub token</summary>
       <description>Optional token reserved for future authenticated requests.</description>
     </key>
+    <key name="cached-result" type="s">
+      <default>''</default>
+      <summary>Cached contribution result</summary>
+      <description>Stores the last successful contribution payload for faster startup.</description>
+    </key>
   </schema>
 </schemalist>

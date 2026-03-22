@@ -75,3 +75,7 @@ The token is not used by the MVP fetch path yet, but the schema is in place so t
 - a GitHub username entry
 - a refresh interval control
 - a stored token field for future authenticated requests
+
+## Lifecycle Notes
+
+On startup, the extension restores the last successful contribution payload from settings if one exists, then starts a fresh fetch immediately. This keeps the popup populated while the next network request is still in flight.

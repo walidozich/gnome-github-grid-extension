@@ -57,8 +57,8 @@
 
 ## Lifecycle
 
-- [ ] Load cached data on enable.
-- [ ] Start data fetch on enable.
+- [x] Load cached data on enable.
+- [x] Start data fetch on enable.
 - [ ] Clean up timers on disable.
 - [ ] Destroy UI objects on disable.
 - [ ] Handle repeated enable and disable cycles safely.
