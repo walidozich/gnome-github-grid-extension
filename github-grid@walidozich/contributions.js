@@ -40,6 +40,39 @@ export function parseContributionSvg(svg) {
     return days;
 }
 
+export function parseContributionHtml(html) {
+    const cellTags = html.match(/<td\b[^>]*ContributionCalendar-day[^>]*>/g) ?? [];
+    const days = [];
+
+    for (const cellTag of cellTags) {
+        const dateMatch = cellTag.match(/data-date="([^"]+)"/);
+        const countMatch = cellTag.match(/data-level="([^"]+)"/);
+        const textMatch = cellTag.match(/data-issue-count="([^"]+)"/);
+        const ariaMatch = cellTag.match(/aria-label="([^"]+)"/);
+
+        if (!dateMatch)
+            continue;
+
+        let count = 0;
+
+        if (textMatch)
+            count = Number.parseInt(textMatch[1], 10) || 0;
+        else if (ariaMatch) {
+            const numberMatch = ariaMatch[1].match(/(\d+)\s+contribution/);
+            count = numberMatch ? Number.parseInt(numberMatch[1], 10) || 0 : 0;
+        } else if (countMatch) {
+            count = Number.parseInt(countMatch[1], 10) || 0;
+        }
+
+        days.push({
+            date: dateMatch[1],
+            count,
+        });
+    }
+
+    return days;
+}
+
 export function getContributionLevel(count, maxCount) {
     if (count <= 0 || maxCount <= 0)
         return 0;

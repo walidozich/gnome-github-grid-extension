@@ -5,6 +5,7 @@ import {
     formatContributionLabel,
     isValidUsername,
     parseCachedResult,
+    parseContributionHtml,
     parseContributionSvg,
     serializeCachedResult,
     summarizeContributions,
@@ -27,11 +28,19 @@ assert(ok, 'Failed to load SVG fixture');
 
 const svg = new TextDecoder().decode(contents);
 const days = parseContributionSvg(svg);
+const htmlDays = parseContributionHtml(`
+    <table>
+      <td class="ContributionCalendar-day" data-date="2026-03-15" data-issue-count="0" aria-label="No contributions on Mar 15, 2026"></td>
+      <td class="ContributionCalendar-day" data-date="2026-03-16" data-issue-count="7" aria-label="7 contributions on Mar 16, 2026"></td>
+    </table>
+`);
 const summary = summarizeContributions(days);
 const weeks = buildWeekColumns(days, summary.maxCount);
 const cache = parseCachedResult(serializeCachedResult('octocat', {days, ...summary}));
 
 assert(days.length === 7, 'Expected seven contribution cells');
+assert(htmlDays.length === 2, 'Expected two HTML contribution cells');
+assert(htmlDays[1].count === 7, 'Expected HTML contribution count parsing');
 assert(summary.total === 51, 'Expected total contribution sum of 51');
 assert(summary.maxCount === 21, 'Expected max contribution count of 21');
 assert(weeks.length === 1, 'Expected one week column');

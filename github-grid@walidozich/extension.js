@@ -12,6 +12,7 @@ import {
     isValidUsername,
     normalizeUsername,
     parseCachedResult,
+    parseContributionHtml,
     parseContributionSvg,
     serializeCachedResult,
     summarizeContributions,
@@ -37,7 +38,10 @@ async function fetchContributions(session, username) {
         throw new Error(`GitHub returned HTTP ${statusCode}`);
 
     const svg = DECODER.decode(bytes.get_data());
-    const days = parseContributionSvg(svg);
+    let days = parseContributionSvg(svg);
+    if (days.length === 0)
+        days = parseContributionHtml(svg);
+
     const {total, maxCount} = summarizeContributions(days);
 
     return {days, total, maxCount};
