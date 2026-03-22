@@ -10,6 +10,7 @@ import {
     buildContributionsUrl,
     buildWeekColumns,
     formatContributionLabel,
+    getContributionRange,
     isValidUsername,
     normalizeUsername,
     parseCachedResult,
@@ -45,9 +46,10 @@ async function fetchContributions(session, username) {
     if (days.length === 0)
         days = parseContributionHtml(svg);
 
-    const {total, maxCount} = summarizeContributions(days);
+    const {total, maxCount, longestStreak} = summarizeContributions(days);
+    const range = getContributionRange(days);
 
-    return {days, total, maxCount};
+    return {days, total, maxCount, longestStreak, range};
 }
 
 const GithubGridIndicator = GObject.registerClass(
@@ -246,9 +248,9 @@ class GithubGridIndicator extends PanelMenu.Button {
         this._renderGrid(result);
         this._setState(
             `Loaded ${result.days.length} daily cells for @${username}.`,
-            'Public contributions from the last year.'
+            `Public contributions from ${result.range.from} to ${result.range.to}.`
         );
-        this._summaryLabel.text = `Total contributions: ${result.total} | Peak day: ${result.maxCount}`;
+        this._summaryLabel.text = `Total: ${result.total} | Peak day: ${result.maxCount} | Longest streak: ${result.longestStreak}`;
     }
 
     restoreCachedState() {

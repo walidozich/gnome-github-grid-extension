@@ -11,13 +11,18 @@ export function isValidUsername(username) {
 }
 
 export function buildContributionsUrl(username) {
-    const today = GLib.DateTime.new_now_utc();
-    const oneYearAgo = today.add_years(-1);
+    return `https://github.com/users/${encodeURIComponent(username)}/contributions`;
+}
 
-    const from = oneYearAgo.format('%Y-%m-%d');
-    const to = today.format('%Y-%m-%d');
+export function getContributionRange(days) {
+    const sortedDays = [...days].sort((left, right) => left.date.localeCompare(right.date));
+    const firstDay = sortedDays[0];
+    const lastDay = sortedDays[sortedDays.length - 1];
 
-    return `https://github.com/users/${encodeURIComponent(username)}/contributions?from=${from}&to=${to}`;
+    return {
+        from: firstDay?.date ?? '',
+        to: lastDay?.date ?? '',
+    };
 }
 
 export function parseContributionSvg(svg) {
@@ -122,10 +127,22 @@ export function formatContributionLabel(day) {
 }
 
 export function summarizeContributions(days) {
+    const sortedDays = [...days].sort((left, right) => left.date.localeCompare(right.date));
     const total = days.reduce((sum, day) => sum + day.count, 0);
     const maxCount = days.reduce((max, day) => Math.max(max, day.count), 0);
+    let longestStreak = 0;
+    let currentStreak = 0;
 
-    return {total, maxCount};
+    for (const day of sortedDays) {
+        if (day.count > 0) {
+            currentStreak += 1;
+            longestStreak = Math.max(longestStreak, currentStreak);
+        } else {
+            currentStreak = 0;
+        }
+    }
+
+    return {total, maxCount, longestStreak};
 }
 
 export function serializeCachedResult(username, result) {
