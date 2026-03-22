@@ -1,3 +1,7 @@
+.github-grid-panel-label {
+    font-weight: 700;
+}
+
 .github-grid-popup {
     min-width: 320px;
     padding: 12px;

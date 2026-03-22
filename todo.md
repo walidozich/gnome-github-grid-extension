@@ -20,11 +20,11 @@
 
 ## UI Placement
 
-- [ ] Decide where the grid should appear:
+- [x] Decide where the grid should appear:
   top bar popup or calendar menu section.
-- [ ] Add a top bar indicator.
-- [ ] Add a popup container for the grid.
-- [ ] Add a loading state.
+- [x] Add a top bar indicator.
+- [x] Add a popup container for the grid.
+- [x] Add a loading state.
 - [ ] Add an empty state.
 - [ ] Add an error state.
 
