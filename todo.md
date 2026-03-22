@@ -25,8 +25,8 @@
 - [x] Add a top bar indicator.
 - [x] Add a popup container for the grid.
 - [x] Add a loading state.
-- [ ] Add an empty state.
-- [ ] Add an error state.
+- [x] Add an empty state.
+- [x] Add an error state.
 
 ## GitHub Data
 

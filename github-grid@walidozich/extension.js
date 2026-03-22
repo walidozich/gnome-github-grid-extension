@@ -36,15 +36,52 @@ class GithubGridIndicator extends PanelMenu.Button {
         });
 
         this._stateLabel = new St.Label({
-            text: 'Loading contribution grid...',
+            text: '',
             style_class: 'github-grid-state',
+            x_align: Clutter.ActorAlign.START,
+        });
+
+        this._hintLabel = new St.Label({
+            text: '',
+            style_class: 'github-grid-hint',
             x_align: Clutter.ActorAlign.START,
         });
 
         this._content.add_child(this._title);
         this._content.add_child(this._stateLabel);
+        this._content.add_child(this._hintLabel);
         popupItem.add_child(this._content);
         this.menu.addMenuItem(popupItem);
+
+        this.showLoadingState();
+    }
+
+    showLoadingState() {
+        this._setState(
+            'Loading contribution grid...',
+            'The popup is ready. Data fetching will be wired in next.'
+        );
+    }
+
+    showEmptyState() {
+        this._setState(
+            'No contribution data available yet.',
+            'Set a GitHub username in extension preferences once settings are connected.'
+        );
+    }
+
+    showErrorState(message = 'Unable to load contribution data.') {
+        this._setState(
+            message,
+            'Check the username, network access, or future API configuration.'
+        );
+        this._stateLabel.add_style_class_name('github-grid-state-error');
+    }
+
+    _setState(stateText, hintText) {
+        this._stateLabel.remove_style_class_name('github-grid-state-error');
+        this._stateLabel.text = stateText;
+        this._hintLabel.text = hintText;
     }
 });
 

@@ -39,6 +39,10 @@ github-grid@walidozich/
 ## Current Scaffold
 
 - `metadata.json` declares the extension metadata and settings schema.
-- `extension.js` adds a minimal top bar indicator.
+- `extension.js` adds a top bar indicator with a popup container and basic UI states.
 - `stylesheet.css` defines the initial UI classes.
 - `schemas/org.gnome.shell.extensions.github-grid.gschema.xml` defines base settings.
+
+## UI Placement Choice
+
+The grid will live in a top bar popup instead of the notification list. This keeps it pinned and easy to reopen without depending on transient GNOME notifications.
