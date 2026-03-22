@@ -37,6 +37,33 @@ github-grid@walidozich/
 4. Restart GNOME Shell or log out and log back in.
 5. Enable the extension with the GNOME Extensions app or `gnome-extensions enable github-grid@walidozich`.
 
+## Packaging
+
+Build a distributable bundle with:
+
+```bash
+./scripts/package.sh
+```
+
+That writes `dist/github-grid@walidozich.shell-extension.zip` and includes the shared `contributions.js` module that the runtime extension imports.
+
+Install the built bundle with:
+
+```bash
+gnome-extensions install -f dist/github-grid@walidozich.shell-extension.zip
+```
+
+For local development without reinstalling the zip on every edit:
+
+```bash
+cp -r github-grid@walidozich/. ~/.local/share/gnome-shell/extensions/github-grid@walidozich/
+glib-compile-schemas ~/.local/share/gnome-shell/extensions/github-grid@walidozich/schemas
+gnome-extensions disable github-grid@walidozich || true
+gnome-extensions enable github-grid@walidozich
+```
+
+If GNOME still appears to hold stale extension state after reinstalling on Wayland, log out and log back in once before continuing runtime tests.
+
 ## Current Scaffold
 
 - `metadata.json` declares the extension metadata and settings schema.

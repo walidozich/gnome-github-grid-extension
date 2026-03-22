@@ -8,7 +8,7 @@ import {
     parseContributionSvg,
     serializeCachedResult,
     summarizeContributions,
-} from '../github-grid@walidozich/lib/contributions.js';
+} from '../github-grid@walidozich/contributions.js';
 
 function assert(condition, message) {
     if (!condition)

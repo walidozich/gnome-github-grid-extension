@@ -77,8 +77,8 @@
 
 ## Packaging
 
-- [ ] Add installation instructions.
-- [ ] Add local development instructions.
+- [x] Add installation instructions.
+- [x] Add local development instructions.
 - [ ] Add screenshots later.
-- [ ] Verify the final extension directory structure.
-- [ ] Prepare the first usable release.
+- [x] Verify the final extension directory structure.
+- [x] Prepare the first usable release.
