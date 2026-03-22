@@ -14,7 +14,7 @@
 - [x] Create `metadata.json`.
 - [x] Create `extension.js`.
 - [x] Create `stylesheet.css`.
-- [ ] Create the `schemas` folder.
+- [x] Create the `schemas` folder.
 - [ ] Create the settings schema XML file.
 - [ ] Add a basic README usage section.
 
