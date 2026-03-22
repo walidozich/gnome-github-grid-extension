@@ -49,9 +49,9 @@
 
 ## Settings
 
-- [ ] Add a username setting.
-- [ ] Add a refresh interval setting.
-- [ ] Add an optional token setting.
+- [x] Add a username setting.
+- [x] Add a refresh interval setting.
+- [x] Add an optional token setting.
 - [ ] Create a preferences UI.
 - [ ] Load settings inside the extension.
 

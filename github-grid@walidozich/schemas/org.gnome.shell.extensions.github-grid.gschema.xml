@@ -12,5 +12,10 @@
       <summary>Refresh interval in minutes</summary>
       <description>How often the extension should refresh GitHub data.</description>
     </key>
+    <key name="github-token" type="s">
+      <default>''</default>
+      <summary>GitHub token</summary>
+      <description>Optional token reserved for future authenticated requests.</description>
+    </key>
   </schema>
 </schemalist>

@@ -206,7 +206,7 @@ class GithubGridIndicator extends PanelMenu.Button {
         if (this._isRefreshing)
             return;
 
-        const username = normalizeUsername(this._settings.get_string('username'));
+        const username = this._getUsername();
         if (!username) {
             this.showEmptyState();
             return;
@@ -246,7 +246,7 @@ class GithubGridIndicator extends PanelMenu.Button {
     startAutoRefresh() {
         this.stopAutoRefresh();
 
-        const minutes = Math.max(5, this._settings.get_int('refresh-interval-minutes'));
+        const minutes = this._getRefreshIntervalMinutes();
         this._refreshSourceId = GLib.timeout_add_seconds(
             GLib.PRIORITY_DEFAULT,
             minutes * 60,
@@ -308,6 +308,18 @@ class GithubGridIndicator extends PanelMenu.Button {
         this._hintLabel.text = hintText;
         if (!this._grid.visible)
             this._summaryLabel.text = '';
+    }
+
+    _getUsername() {
+        return normalizeUsername(this._settings.get_string('username'));
+    }
+
+    _getRefreshIntervalMinutes() {
+        return Math.max(5, this._settings.get_int('refresh-interval-minutes'));
+    }
+
+    _getGithubToken() {
+        return this._settings.get_string('github-token').trim();
     }
 
     _clearGrid() {

@@ -56,3 +56,13 @@ The popup supports manual refresh and periodic background refresh using the conf
 ## Grid Rendering Notes
 
 The popup now renders the last year of contributions as week columns with daily cells. Hovering a cell updates the detail text with the contribution count and date, which is a practical replacement for a traditional tooltip in GNOME Shell popup content.
+
+## Settings Model
+
+The extension settings now define three keys:
+
+- `username`
+- `refresh-interval-minutes`
+- `github-token`
+
+The token is not used by the MVP fetch path yet, but the schema is in place so the preferences UI and future authenticated API work can build on a stable settings model.
