@@ -85,3 +85,14 @@ On shutdown, the extension removes refresh timers, aborts the active Soup sessio
 ## Local Validation
 
 There is now a local `gjs` smoke test at `tests/contributions-smoke.js` that exercises the shared contribution parser, level mapping, cache round-trip, and username validation logic without requiring a live GNOME Shell session.
+
+Run it with:
+
+```bash
+gjs -m tests/contributions-smoke.js
+glib-compile-schemas github-grid@walidozich/schemas
+```
+
+## Manual Runtime Testing
+
+The live GNOME test matrix is documented in `tests/manual-runtime-checklist.md`. That checklist covers valid and invalid usernames, offline behavior, API failure behavior, refresh flow, and popup layout checks inside an actual GNOME Shell session.

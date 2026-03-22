@@ -66,6 +66,7 @@
 ## Testing
 
 - [x] Add automated smoke tests for shared contribution logic.
+- [x] Document manual GNOME runtime test cases.
 - [ ] Test the extension with a valid username.
 - [ ] Test the extension with an invalid username.
 - [ ] Test offline behavior.
