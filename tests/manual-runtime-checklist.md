@@ -2,10 +2,13 @@
 
 ## Setup
 
+0. Confirm the shell version with `gnome-shell --version`.
 1. Copy `github-grid@walidozich` to `~/.local/share/gnome-shell/extensions/`.
 2. Run `glib-compile-schemas ~/.local/share/gnome-shell/extensions/github-grid@walidozich/schemas`.
 3. Open preferences with `gnome-extensions prefs github-grid@walidozich`.
 4. Enable the extension with `gnome-extensions enable github-grid@walidozich`.
+
+If GNOME does not recognize the UUID, reload the shell session and re-check that `metadata.json` includes your major GNOME Shell version in `shell-version`.
 
 ## Valid Username
 

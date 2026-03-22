@@ -8,7 +8,7 @@ Project initialized. Implementation has not started yet.
 
 ## Project Setup Decisions
 
-- Target GNOME Shell version: 46
+- Target GNOME Shell versions: 46 and 49
 - Extension UUID: `github-grid@walidozich`
 - GitHub username source: extension setting
 - GitHub token support: not in the first version
@@ -92,6 +92,18 @@ Run it with:
 gjs -m tests/contributions-smoke.js
 glib-compile-schemas github-grid@walidozich/schemas
 ```
+
+Executed locally:
+
+- `gjs -m tests/contributions-smoke.js` passed
+- `glib-compile-schemas github-grid@walidozich/schemas` passed
+- `gnome-shell --version` reported `GNOME Shell 49.4`
+- `gnome-extensions pack github-grid@walidozich --schema=schemas/org.gnome.shell.extensions.github-grid.gschema.xml -o .` passed
+
+Compatibility note:
+
+- The extension metadata now declares support for GNOME Shell `46` and `49`
+- `gnome-extensions info github-grid@walidozich` still did not enumerate the UUID from this CLI context after direct copy and bundle install, so live runtime checks remain manual
 
 ## Manual Runtime Testing
 
