@@ -6,7 +6,7 @@
 - [x] Confirm the extension UUID.
 - [x] Choose the GitHub username source:
   extension setting or hardcoded value.
-- [ ] Decide whether to support a GitHub token.
+- [x] Decide whether to support a GitHub token.
 - [ ] Create the base extension folder structure.
 
 ## Extension Scaffold
