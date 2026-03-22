@@ -41,11 +41,20 @@ export function parseContributionSvg(svg) {
 }
 
 export function parseContributionHtml(html) {
+    const tooltipCounts = new Map();
+    const tooltipMatches = html.matchAll(/<tool-tip\b[^>]*for="([^"]+)"[^>]*>([^<]+)<\/tool-tip>/g);
+
+    for (const [, targetId, tooltipText] of tooltipMatches) {
+        const numberMatch = tooltipText.match(/(\d+)\s+contribution/);
+        tooltipCounts.set(targetId, numberMatch ? Number.parseInt(numberMatch[1], 10) || 0 : 0);
+    }
+
     const cellTags = html.match(/<td\b[^>]*ContributionCalendar-day[^>]*>/g) ?? [];
     const days = [];
 
     for (const cellTag of cellTags) {
         const dateMatch = cellTag.match(/data-date="([^"]+)"/);
+        const idMatch = cellTag.match(/id="([^"]+)"/);
         const countMatch = cellTag.match(/data-level="([^"]+)"/);
         const textMatch = cellTag.match(/data-issue-count="([^"]+)"/);
         const ariaMatch = cellTag.match(/aria-label="([^"]+)"/);
@@ -55,7 +64,9 @@ export function parseContributionHtml(html) {
 
         let count = 0;
 
-        if (textMatch)
+        if (idMatch && tooltipCounts.has(idMatch[1]))
+            count = tooltipCounts.get(idMatch[1]) ?? 0;
+        else if (textMatch)
             count = Number.parseInt(textMatch[1], 10) || 0;
         else if (ariaMatch) {
             const numberMatch = ariaMatch[1].match(/(\d+)\s+contribution/);
@@ -88,10 +99,11 @@ export function getContributionLevel(count, maxCount) {
 }
 
 export function buildWeekColumns(days, maxCount) {
+    const sortedDays = [...days].sort((left, right) => left.date.localeCompare(right.date));
     const weeks = [];
 
-    for (let index = 0; index < days.length; index += 7) {
-        const weekDays = days.slice(index, index + 7).map(day => ({
+    for (let index = 0; index < sortedDays.length; index += 7) {
+        const weekDays = sortedDays.slice(index, index + 7).map(day => ({
             ...day,
             level: getContributionLevel(day.count, maxCount),
         }));

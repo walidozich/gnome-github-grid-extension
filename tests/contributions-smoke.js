@@ -30,12 +30,23 @@ const svg = new TextDecoder().decode(contents);
 const days = parseContributionSvg(svg);
 const htmlDays = parseContributionHtml(`
     <table>
-      <td class="ContributionCalendar-day" data-date="2026-03-15" data-issue-count="0" aria-label="No contributions on Mar 15, 2026"></td>
-      <td class="ContributionCalendar-day" data-date="2026-03-16" data-issue-count="7" aria-label="7 contributions on Mar 16, 2026"></td>
+      <td class="ContributionCalendar-day" id="contribution-day-component-0-0" data-date="2026-03-15" data-level="0"></td>
+      <tool-tip for="contribution-day-component-0-0">No contributions on March 15th.</tool-tip>
+      <td class="ContributionCalendar-day" id="contribution-day-component-0-1" data-date="2026-03-16" data-level="1"></td>
+      <tool-tip for="contribution-day-component-0-1">7 contributions on March 16th.</tool-tip>
     </table>
 `);
 const summary = summarizeContributions(days);
 const weeks = buildWeekColumns(days, summary.maxCount);
+const sortedWeeks = buildWeekColumns([
+    {date: '2026-01-11', count: 4},
+    {date: '2026-01-04', count: 11},
+    {date: '2026-01-18', count: 1},
+    {date: '2026-01-25', count: 3},
+    {date: '2026-02-01', count: 2},
+    {date: '2026-02-08', count: 1},
+    {date: '2026-02-15', count: 0},
+], 11);
 const cache = parseCachedResult(serializeCachedResult('octocat', {days, ...summary}));
 
 assert(days.length === 7, 'Expected seven contribution cells');
@@ -46,6 +57,7 @@ assert(summary.maxCount === 21, 'Expected max contribution count of 21');
 assert(weeks.length === 1, 'Expected one week column');
 assert(weeks[0][0].level === 0, 'Expected zero-contribution cell level');
 assert(weeks[0][6].level === 4, 'Expected max contribution cell level');
+assert(sortedWeeks[0][0].date === '2026-01-04', 'Expected week columns to be sorted chronologically');
 assert(formatContributionLabel(days[1]).includes('1 contribution'), 'Expected singular label formatting');
 assert(isValidUsername('octocat'), 'Expected octocat to be a valid username');
 assert(!isValidUsername('bad--name'), 'Expected bad--name to be invalid');
