@@ -1,0 +1,11 @@
+<svg>
+  <g>
+    <rect data-date="2026-03-15" data-count="0"></rect>
+    <rect data-date="2026-03-16" data-count="1"></rect>
+    <rect data-date="2026-03-17" data-count="3"></rect>
+    <rect data-date="2026-03-18" data-count="5"></rect>
+    <rect data-date="2026-03-19" data-count="8"></rect>
+    <rect data-date="2026-03-20" data-count="13"></rect>
+    <rect data-date="2026-03-21" data-count="21"></rect>
+  </g>
+</svg>

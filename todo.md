@@ -65,6 +65,7 @@
 
 ## Testing
 
+- [x] Add automated smoke tests for shared contribution logic.
 - [ ] Test the extension with a valid username.
 - [ ] Test the extension with an invalid username.
 - [ ] Test offline behavior.

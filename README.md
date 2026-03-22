@@ -81,3 +81,7 @@ The token is not used by the MVP fetch path yet, but the schema is in place so t
 On startup, the extension restores the last successful contribution payload from settings if one exists, then starts a fresh fetch immediately. This keeps the popup populated while the next network request is still in flight.
 
 On shutdown, the extension removes refresh timers, aborts the active Soup session, and ignores late async responses from older refresh requests. That keeps repeated enable/disable cycles from mutating destroyed UI actors.
+
+## Local Validation
+
+There is now a local `gjs` smoke test at `tests/contributions-smoke.js` that exercises the shared contribution parser, level mapping, cache round-trip, and username validation logic without requiring a live GNOME Shell session.
