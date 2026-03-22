@@ -1,4 +1,5 @@
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Soup from 'gi://Soup';
@@ -22,6 +23,8 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 const DECODER = new TextDecoder();
+
+Gio._promisify(Soup.Session.prototype, 'send_and_read_async', 'send_and_read_finish');
 
 async function fetchContributions(session, username) {
     const message = Soup.Message.new('GET', buildContributionsUrl(username));
