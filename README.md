@@ -6,6 +6,13 @@ GNOME Shell extension idea: show a GitHub-style contribution grid for a specific
 
 Project initialized. Implementation has not started yet.
 
+## Project Setup Decisions
+
+- Target GNOME Shell version: 46
+- Extension UUID: `github-grid@walidozich`
+- GitHub username source: extension setting
+- GitHub token support: not in the first version
+
 ## Next Step
 
 Build the extension scaffold and choose the GitHub data source.

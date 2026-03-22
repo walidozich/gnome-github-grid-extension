@@ -2,7 +2,7 @@
 
 ## Project Setup
 
-- [ ] Decide the target GNOME Shell version.
+- [x] Decide the target GNOME Shell version.
 - [ ] Confirm the extension UUID.
 - [ ] Choose the GitHub username source:
   extension setting or hardcoded value.
