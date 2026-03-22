@@ -33,8 +33,9 @@ github-grid@walidozich/
 1. Copy `github-grid@walidozich` into `~/.local/share/gnome-shell/extensions/`.
 2. Compile the schema inside the extension directory:
    `glib-compile-schemas schemas`
-3. Restart GNOME Shell or log out and log back in.
-4. Enable the extension with the GNOME Extensions app or `gnome-extensions enable github-grid@walidozich`.
+3. Open preferences with `gnome-extensions prefs github-grid@walidozich` and set the username.
+4. Restart GNOME Shell or log out and log back in.
+5. Enable the extension with the GNOME Extensions app or `gnome-extensions enable github-grid@walidozich`.
 
 ## Current Scaffold
 
@@ -66,3 +67,11 @@ The extension settings now define three keys:
 - `github-token`
 
 The token is not used by the MVP fetch path yet, but the schema is in place so the preferences UI and future authenticated API work can build on a stable settings model.
+
+## Preferences UI
+
+`prefs.js` provides a Libadwaita preferences window with:
+
+- a GitHub username entry
+- a refresh interval control
+- a stored token field for future authenticated requests

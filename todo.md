@@ -52,8 +52,8 @@
 - [x] Add a username setting.
 - [x] Add a refresh interval setting.
 - [x] Add an optional token setting.
-- [ ] Create a preferences UI.
-- [ ] Load settings inside the extension.
+- [x] Create a preferences UI.
+- [x] Load settings inside the extension.
 
 ## Lifecycle
 
