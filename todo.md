@@ -12,7 +12,7 @@
 ## Extension Scaffold
 
 - [x] Create `metadata.json`.
-- [ ] Create `extension.js`.
+- [x] Create `extension.js`.
 - [ ] Create `stylesheet.css`.
 - [ ] Create the `schemas` folder.
 - [ ] Create the settings schema XML file.
