@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.github-grid"
+          path="/org/gnome/shell/extensions/github-grid/">
+    <key name="username" type="s">
+      <default>'octocat'</default>
+      <summary>GitHub username</summary>
+      <description>The GitHub account used to load contribution data.</description>
+    </key>
+    <key name="refresh-interval-minutes" type="i">
+      <default>60</default>
+      <summary>Refresh interval in minutes</summary>
+      <description>How often the extension should refresh GitHub data.</description>
+    </key>
+  </schema>
+</schemalist>

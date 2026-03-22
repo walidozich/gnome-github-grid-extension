@@ -15,7 +15,7 @@
 - [x] Create `extension.js`.
 - [x] Create `stylesheet.css`.
 - [x] Create the `schemas` folder.
-- [ ] Create the settings schema XML file.
+- [x] Create the settings schema XML file.
 - [ ] Add a basic README usage section.
 
 ## UI Placement
