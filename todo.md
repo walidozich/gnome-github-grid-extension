@@ -16,7 +16,7 @@
 - [x] Create `stylesheet.css`.
 - [x] Create the `schemas` folder.
 - [x] Create the settings schema XML file.
-- [ ] Add a basic README usage section.
+- [x] Add a basic README usage section.
 
 ## UI Placement
 
