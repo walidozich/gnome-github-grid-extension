@@ -16,3 +16,12 @@ Project initialized. Implementation has not started yet.
 ## Next Step
 
 Build the extension scaffold and choose the GitHub data source.
+
+## Base Structure
+
+```text
+github-grid@walidozich/
+├── assets/
+├── lib/
+└── schemas/
+```

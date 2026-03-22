@@ -7,7 +7,7 @@
 - [x] Choose the GitHub username source:
   extension setting or hardcoded value.
 - [x] Decide whether to support a GitHub token.
-- [ ] Create the base extension folder structure.
+- [x] Create the base extension folder structure.
 
 ## Extension Scaffold
 
