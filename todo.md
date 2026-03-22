@@ -40,10 +40,10 @@
 
 ## Grid Rendering
 
-- [ ] Define the grid data format.
-- [ ] Map contribution counts to color levels.
-- [ ] Render week columns.
-- [ ] Render day cells.
+- [x] Define the grid data format.
+- [x] Map contribution counts to color levels.
+- [x] Render week columns.
+- [x] Render day cells.
 - [ ] Add hover text or labels if practical.
 - [ ] Match the GitHub-style visual spacing.
 

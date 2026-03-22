@@ -50,6 +50,34 @@ function parseContributionSvg(svg) {
     return days;
 }
 
+function getContributionLevel(count, maxCount) {
+    if (count <= 0 || maxCount <= 0)
+        return 0;
+
+    const ratio = count / maxCount;
+    if (ratio >= 0.75)
+        return 4;
+    if (ratio >= 0.5)
+        return 3;
+    if (ratio >= 0.25)
+        return 2;
+    return 1;
+}
+
+function buildWeekColumns(days, maxCount) {
+    const weeks = [];
+
+    for (let index = 0; index < days.length; index += 7) {
+        const weekDays = days.slice(index, index + 7).map(day => ({
+            ...day,
+            level: getContributionLevel(day.count, maxCount),
+        }));
+        weeks.push(weekDays);
+    }
+
+    return weeks;
+}
+
 async function fetchContributions(session, username) {
     const message = Soup.Message.new('GET', buildContributionsUrl(username));
     message.request_headers.append('User-Agent', 'github-grid-gnome-extension');
@@ -124,10 +152,23 @@ class GithubGridIndicator extends PanelMenu.Button {
             x_align: Clutter.ActorAlign.START,
         });
 
+        this._gridFrame = new St.BoxLayout({
+            style_class: 'github-grid-frame',
+            x_expand: true,
+        });
+
+        this._grid = new St.BoxLayout({
+            style_class: 'github-grid',
+            x_expand: true,
+        });
+
+        this._gridFrame.add_child(this._grid);
+
         this._content.add_child(this._title);
         this._content.add_child(this._stateLabel);
         this._content.add_child(this._hintLabel);
         this._content.add_child(this._summaryLabel);
+        this._content.add_child(this._gridFrame);
         popupItem.add_child(this._content);
         this.menu.addMenuItem(popupItem);
 
@@ -234,9 +275,10 @@ class GithubGridIndicator extends PanelMenu.Button {
     }
 
     showLoadedState(username, result) {
+        this._renderGrid(result);
         this._setState(
             `Loaded ${result.days.length} daily cells for @${username}.`,
-            'The real contribution grid will be rendered in the next section.'
+            'Public contributions from the last year.'
         );
         this._summaryLabel.text = `Total contributions: ${result.total} | Peak day: ${result.maxCount}`;
     }
@@ -253,7 +295,38 @@ class GithubGridIndicator extends PanelMenu.Button {
         this._stateLabel.remove_style_class_name('github-grid-state-error');
         this._stateLabel.text = stateText;
         this._hintLabel.text = hintText;
-        this._summaryLabel.text = '';
+        if (!this._grid.visible)
+            this._summaryLabel.text = '';
+    }
+
+    _clearGrid() {
+        this._grid.destroy_all_children();
+        this._grid.hide();
+    }
+
+    _renderGrid(result) {
+        this._clearGrid();
+
+        const weeks = buildWeekColumns(result.days, result.maxCount);
+        for (const weekDays of weeks) {
+            const weekColumn = new St.BoxLayout({
+                vertical: true,
+                style_class: 'github-grid-week',
+            });
+
+            for (const day of weekDays) {
+                const cell = new St.Widget({
+                    style_class: `github-grid-cell github-grid-cell-level-${day.level}`,
+                    width: 10,
+                    height: 10,
+                });
+                weekColumn.add_child(cell);
+            }
+
+            this._grid.add_child(weekColumn);
+        }
+
+        this._grid.show();
     }
 
     destroy() {

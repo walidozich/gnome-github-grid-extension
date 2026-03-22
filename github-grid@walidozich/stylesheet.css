@@ -29,3 +29,40 @@
 .github-grid-summary {
     font-weight: 700;
 }
+
+.github-grid-frame {
+    padding-top: 4px;
+}
+
+.github-grid {
+    spacing: 3px;
+}
+
+.github-grid-week {
+    spacing: 3px;
+}
+
+.github-grid-cell {
+    border-radius: 2px;
+    background-color: #2d333b;
+}
+
+.github-grid-cell-level-0 {
+    background-color: #2d333b;
+}
+
+.github-grid-cell-level-1 {
+    background-color: #0e4429;
+}
+
+.github-grid-cell-level-2 {
+    background-color: #006d32;
+}
+
+.github-grid-cell-level-3 {
+    background-color: #26a641;
+}
+
+.github-grid-cell-level-4 {
+    background-color: #39d353;
+}
