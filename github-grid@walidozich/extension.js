@@ -140,6 +140,8 @@ class GithubGridIndicator extends PanelMenu.Button {
         this._refreshSourceId = null;
         this._settingsSignals = [];
         this._isRefreshing = false;
+        this._destroyed = false;
+        this._requestSerial = 0;
 
         const panelLabel = new St.Label({
             text: 'GH',
@@ -244,11 +246,15 @@ class GithubGridIndicator extends PanelMenu.Button {
         }
 
         this._isRefreshing = true;
+        const requestSerial = ++this._requestSerial;
         this._refreshItem.setSensitive(false);
         this.showLoadingState(username);
 
         try {
             const result = await fetchContributions(this._session, username);
+            if (this._destroyed || requestSerial !== this._requestSerial)
+                return;
+
             if (result.days.length === 0) {
                 this.showEmptyState(username);
                 return;
@@ -260,11 +266,17 @@ class GithubGridIndicator extends PanelMenu.Button {
             );
             this.showLoadedState(username, result);
         } catch (error) {
+            if (this._destroyed || requestSerial !== this._requestSerial)
+                return;
+
             this.showErrorState(
                 `Unable to load @${username}.`,
                 error.message
             );
         } finally {
+            if (this._destroyed || requestSerial !== this._requestSerial)
+                return;
+
             this._refreshItem.setSensitive(true);
             this._isRefreshing = false;
         }
@@ -398,12 +410,24 @@ class GithubGridIndicator extends PanelMenu.Button {
     }
 
     destroy() {
+        this._destroyed = true;
+        this._requestSerial += 1;
+        this._isRefreshing = false;
         this.stopAutoRefresh();
 
         for (const signalId of this._settingsSignals)
             this._settings.disconnect(signalId);
 
         this._settingsSignals = [];
+        this._clearGrid();
+        this._content.destroy_all_children();
+        this._refreshItem = null;
+        this._grid = null;
+        this._gridFrame = null;
+        this._summaryLabel = null;
+        this._hintLabel = null;
+        this._stateLabel = null;
+        this._title = null;
         super.destroy();
     }
 });
@@ -426,6 +450,9 @@ export default class GithubGridExtension extends Extension {
             indicator.destroy();
             indicator = null;
         }
+
+        if (session)
+            session.abort();
 
         session = null;
     }

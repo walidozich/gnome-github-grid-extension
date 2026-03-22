@@ -59,9 +59,9 @@
 
 - [x] Load cached data on enable.
 - [x] Start data fetch on enable.
-- [ ] Clean up timers on disable.
-- [ ] Destroy UI objects on disable.
-- [ ] Handle repeated enable and disable cycles safely.
+- [x] Clean up timers on disable.
+- [x] Destroy UI objects on disable.
+- [x] Handle repeated enable and disable cycles safely.
 
 ## Testing
 
