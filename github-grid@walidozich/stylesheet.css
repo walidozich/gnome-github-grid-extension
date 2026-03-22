@@ -31,19 +31,20 @@
 }
 
 .github-grid-frame {
-    padding-top: 4px;
+    padding-top: 6px;
 }
 
 .github-grid {
-    spacing: 3px;
+    spacing: 2px;
 }
 
 .github-grid-week {
-    spacing: 3px;
+    spacing: 2px;
 }
 
 .github-grid-cell {
     border-radius: 2px;
+    border: 1px solid rgba(240, 246, 252, 0.04);
     background-color: #2d333b;
 }
 

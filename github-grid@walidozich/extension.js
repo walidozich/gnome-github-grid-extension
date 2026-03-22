@@ -78,6 +78,14 @@ function buildWeekColumns(days, maxCount) {
     return weeks;
 }
 
+function formatContributionLabel(day) {
+    const date = GLib.DateTime.new_from_iso8601(`${day.date}T00:00:00Z`, null);
+    const formattedDate = date ? date.format('%b %d, %Y') : day.date;
+    const contributionText = day.count === 1 ? '1 contribution' : `${day.count} contributions`;
+
+    return `${contributionText} on ${formattedDate}`;
+}
+
 async function fetchContributions(session, username) {
     const message = Soup.Message.new('GET', buildContributionsUrl(username));
     message.request_headers.append('User-Agent', 'github-grid-gnome-extension');
@@ -259,6 +267,7 @@ class GithubGridIndicator extends PanelMenu.Button {
     }
 
     showLoadingState(username = '') {
+        this._clearGrid();
         const target = username ? ` for @${username}` : '';
         this._setState(
             `Loading contribution grid${target}...`,
@@ -267,6 +276,7 @@ class GithubGridIndicator extends PanelMenu.Button {
     }
 
     showEmptyState(username = '') {
+        this._clearGrid();
         const target = username ? ` for @${username}` : '';
         this._setState(
             `No contribution data available${target}.`,
@@ -284,6 +294,7 @@ class GithubGridIndicator extends PanelMenu.Button {
     }
 
     showErrorState(message = 'Unable to load contribution data.', hint = 'Check the username or network access.') {
+        this._clearGrid();
         this._setState(
             message,
             hint
@@ -319,6 +330,14 @@ class GithubGridIndicator extends PanelMenu.Button {
                     style_class: `github-grid-cell github-grid-cell-level-${day.level}`,
                     width: 10,
                     height: 10,
+                    reactive: true,
+                    track_hover: true,
+                });
+                cell.connect('enter-event', () => {
+                    this._hintLabel.text = formatContributionLabel(day);
+                });
+                cell.connect('leave-event', () => {
+                    this._hintLabel.text = 'Public contributions from the last year.';
                 });
                 weekColumn.add_child(cell);
             }

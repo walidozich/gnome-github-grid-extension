@@ -44,8 +44,8 @@
 - [x] Map contribution counts to color levels.
 - [x] Render week columns.
 - [x] Render day cells.
-- [ ] Add hover text or labels if practical.
-- [ ] Match the GitHub-style visual spacing.
+- [x] Add hover text or labels if practical.
+- [x] Match the GitHub-style visual spacing.
 
 ## Settings
 

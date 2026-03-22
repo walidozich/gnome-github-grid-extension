@@ -52,3 +52,7 @@ The grid will live in a top bar popup instead of the notification list. This kee
 The first version uses GitHub's public contributions endpoint and parses the returned SVG data. This avoids requiring a token for the MVP while still exposing the daily contribution counts we need for rendering.
 
 The popup supports manual refresh and periodic background refresh using the configured interval. Username validation happens before the request is sent so obvious input errors fail locally.
+
+## Grid Rendering Notes
+
+The popup now renders the last year of contributions as week columns with daily cells. Hovering a cell updates the detail text with the contribution count and date, which is a practical replacement for a traditional tooltip in GNOME Shell popup content.
