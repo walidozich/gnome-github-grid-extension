@@ -4,7 +4,7 @@
 
 - [x] Decide the target GNOME Shell version.
 - [x] Confirm the extension UUID.
-- [ ] Choose the GitHub username source:
+- [x] Choose the GitHub username source:
   extension setting or hardcoded value.
 - [ ] Decide whether to support a GitHub token.
 - [ ] Create the base extension folder structure.
