@@ -1,51 +1,71 @@
-# GitHub Grid GNOME Extension
+# GNOME GitHub Grid Extension
 
-GNOME Shell extension idea: show a GitHub-style contribution grid for a specific account from the top bar or notification-related UI.
+GNOME Shell extension that shows a GitHub-style contribution grid for a selected account in a top bar popup.
 
-## Status
+## Features
 
-Project initialized. Implementation has not started yet.
+- Shows the last 365 days of GitHub contribution activity
+- Renders a GitHub-style grid directly in the GNOME top bar popup
+- Uses a configurable GitHub username
+- Supports manual refresh and timed background refresh
+- Displays summary data including total contributions, peak day, and longest streak
+- Includes a preferences window for username and refresh interval
 
-## Project Setup Decisions
+## Requirements
 
-- Target GNOME Shell versions: 46 and 49
-- Extension UUID: `github-grid@walidozich`
-- GitHub username source: extension setting
-- GitHub token support: not in the first version
+- GNOME Shell `46` or `49`
+- `glib-compile-schemas`
+- `gnome-extensions`
+- `gjs`
 
-## Next Step
+## Install From Source
 
-Build the extension scaffold and choose the GitHub data source.
+1. Copy the extension directory into the local GNOME extensions directory:
 
-## Base Structure
+   ```bash
+   mkdir -p ~/.local/share/gnome-shell/extensions/github-grid@walidozich
+   cp -r github-grid@walidozich/. ~/.local/share/gnome-shell/extensions/github-grid@walidozich/
+   ```
 
-```text
-github-grid@walidozich/
-├── assets/
-├── extension.js
-├── lib/
-├── metadata.json
-└── schemas/
-```
+2. Compile the schema:
 
-## Basic Usage
+   ```bash
+   glib-compile-schemas ~/.local/share/gnome-shell/extensions/github-grid@walidozich/schemas
+   ```
 
-1. Copy `github-grid@walidozich` into `~/.local/share/gnome-shell/extensions/`.
-2. Compile the schema inside the extension directory:
-   `glib-compile-schemas schemas`
-3. Open preferences with `gnome-extensions prefs github-grid@walidozich` and set the username.
-4. Restart GNOME Shell or log out and log back in.
-5. Enable the extension with the GNOME Extensions app or `gnome-extensions enable github-grid@walidozich`.
+3. On Wayland, log out and log back in if GNOME does not immediately discover the extension.
 
-## Packaging
+4. Check that GNOME sees the extension:
 
-Build a distributable bundle with:
+   ```bash
+   gnome-extensions info github-grid@walidozich
+   ```
+
+5. Open preferences and set the GitHub username:
+
+   ```bash
+   gnome-extensions prefs github-grid@walidozich
+   ```
+
+6. Enable the extension:
+
+   ```bash
+   gnome-extensions enable github-grid@walidozich
+   ```
+
+## Build A Bundle
+
+Build a distributable extension bundle with:
 
 ```bash
 ./scripts/package.sh
 ```
 
-That writes `dist/github-grid@walidozich.shell-extension.zip` and includes the shared `contributions.js` module that the runtime extension imports.
+This writes:
+
+```text
+dist/github-grid@walidozich.shell-extension.zip
+```
 
 Install the built bundle with:
 
@@ -53,7 +73,9 @@ Install the built bundle with:
 gnome-extensions install -f dist/github-grid@walidozich.shell-extension.zip
 ```
 
-For local development without reinstalling the zip on every edit:
+## Development Workflow
+
+For local iteration without reinstalling the zip each time:
 
 ```bash
 cp -r github-grid@walidozich/. ~/.local/share/gnome-shell/extensions/github-grid@walidozich/
@@ -62,91 +84,82 @@ gnome-extensions disable github-grid@walidozich || true
 gnome-extensions enable github-grid@walidozich
 ```
 
-If GNOME still appears to hold stale extension state after reinstalling on Wayland, log out and log back in once before continuing runtime tests.
+If GNOME Shell appears to hold stale module state on Wayland after code changes, log out and log back in.
 
-## Current Scaffold
+## Screenshots
 
-- `metadata.json` declares the extension metadata and settings schema.
-- `extension.js` adds a top bar indicator with a popup container and basic UI states.
-- `stylesheet.css` defines the initial UI classes.
-- `schemas/org.gnome.shell.extensions.github-grid.gschema.xml` defines base settings.
+### Preferences
 
-## UI Placement Choice
+![Extension parameters](./parameters.png)
 
-The grid will live in a top bar popup instead of the notification list. This keeps it pinned and easy to reopen without depending on transient GNOME notifications.
+### Popup
 
-## GitHub Data Choice
+![Extension dropdown](./dropdown.png)
 
-The first version uses GitHub's public contributions endpoint and parses the returned SVG data. This avoids requiring a token for the MVP while still exposing the daily contribution counts we need for rendering.
+## How It Works
 
-The popup supports manual refresh and periodic background refresh using the configured interval. Username validation happens before the request is sent so obvious input errors fail locally.
+- The extension fetches public contribution data from GitHub's contributions endpoint
+- It parses GitHub's current contribution markup and extracts real counts from the tooltip elements associated with each day cell
+- It renders the data as week columns in a GNOME Shell popup
+- It summarizes the visible range with total contributions, peak day, and longest streak
 
-## Grid Rendering Notes
+## Settings
 
-The popup now renders the last year of contributions as week columns with daily cells. Hovering a cell updates the detail text with the contribution count and date, which is a practical replacement for a traditional tooltip in GNOME Shell popup content.
-
-## Settings Model
-
-The extension settings now define three keys:
+The extension stores these settings:
 
 - `username`
 - `refresh-interval-minutes`
 - `github-token`
+- `cached-result`
 
-The token is not used by the MVP fetch path yet, but the schema is in place so the preferences UI and future authenticated API work can build on a stable settings model.
+Current behavior:
 
-## Preferences UI
+- `username` controls the GitHub account shown in the popup
+- `refresh-interval-minutes` controls background refresh timing
+- `github-token` is reserved for future authenticated API support
+- `cached-result` stores the last successful payload for faster startup
 
-`prefs.js` provides a Libadwaita preferences window with:
+## Testing
 
-- a GitHub username entry
-- a refresh interval control
-- a stored token field for future authenticated requests
-
-## Lifecycle Notes
-
-On startup, the extension restores the last successful contribution payload from settings if one exists, then starts a fresh fetch immediately. This keeps the popup populated while the next network request is still in flight.
-
-On shutdown, the extension removes refresh timers, aborts the active Soup session, and ignores late async responses from older refresh requests. That keeps repeated enable/disable cycles from mutating destroyed UI actors.
-
-## Local Validation
-
-There is now a local `gjs` smoke test at `tests/contributions-smoke.js` that exercises the shared contribution parser, level mapping, cache round-trip, and username validation logic without requiring a live GNOME Shell session.
-
-Run it with:
+Run the local smoke tests with:
 
 ```bash
 gjs -m tests/contributions-smoke.js
 glib-compile-schemas github-grid@walidozich/schemas
 ```
 
-Executed locally:
+What has been verified:
 
-- `gjs -m tests/contributions-smoke.js` passed
-- `glib-compile-schemas github-grid@walidozich/schemas` passed
-- `gnome-shell --version` reported `GNOME Shell 49.4`
-- `gnome-extensions pack github-grid@walidozich --schema=schemas/org.gnome.shell.extensions.github-grid.gschema.xml -o .` passed
+- shared parsing and summary logic through `gjs` smoke tests
+- GNOME Shell extension discovery and activation
+- valid username handling
+- invalid username handling
+- refresh path behavior
+- rolling 365-day grid rendering
+- chronological day ordering
+- real count extraction from GitHub tooltip markup
 
-Compatibility note:
+Manual runtime checks are documented in:
 
-- The extension metadata now declares support for GNOME Shell `46` and `49`
-- `gnome-extensions info github-grid@walidozich` still did not enumerate the UUID from this CLI context after direct copy and bundle install, which points to session-side discovery state rather than a simple missing file
+```text
+tests/manual-runtime-checklist.md
+```
 
-Diagnosis so far:
+## Project Layout
 
-- The original metadata was incompatible with this machine because the shell is `49.4` and the extension initially declared only `46`
-- The CLI now works normally for other extensions and the bundle packs successfully
-- The installed files and `metadata.json` are present in `~/.local/share/gnome-shell/extensions/github-grid@walidozich`
-- On Wayland, GNOME Shell can require a session restart before a newly added UUID is enumerated by the shell-side extension service
+```text
+github-grid@walidozich/
+├── contributions.js
+├── extension.js
+├── metadata.json
+├── prefs.js
+├── schemas/
+│   └── org.gnome.shell.extensions.github-grid.gschema.xml
+└── stylesheet.css
+```
 
-Executed in the live GNOME session after packaging fixes:
+## Notes
 
-- `gnome-extensions info github-grid@walidozich` reports `State: ACTIVE`
-- the extension stayed `ACTIVE` after setting `username='bad--name'`
-- the extension stayed `ACTIVE` after restoring `username='octocat'`
-- the extension stayed `ACTIVE` after lowering `refresh-interval-minutes` to `5`
-- no fresh GNOME Shell log errors were emitted for the extension during those settings-driven checks
-
-## Manual Runtime Testing
-
-The live GNOME test matrix is documented in `tests/manual-runtime-checklist.md`. That checklist covers valid and invalid usernames, offline behavior, API failure behavior, refresh flow, and popup layout checks inside an actual GNOME Shell session.
+- The popup is intentionally placed in the top bar instead of the notification list so it remains easy to reopen
+- GitHub may change the structure of the contributions markup in the future; parsing logic may need updates if that happens
+- A logout/login cycle can be necessary on Wayland when GNOME Shell caches imported extension modules
