@@ -1,0 +1,13 @@
+.github-grid-popup {
+    min-width: 320px;
+    padding: 12px;
+    spacing: 12px;
+}
+
+.github-grid-title {
+    font-weight: 700;
+}
+
+.github-grid-state {
+    opacity: 0.85;
+}
