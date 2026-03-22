@@ -30,9 +30,9 @@
 
 ## GitHub Data
 
-- [ ] Choose the data source:
+- [x] Choose the data source:
   GraphQL API or public profile parsing.
-- [ ] Define the fetch function.
+- [x] Define the fetch function.
 - [ ] Add username validation.
 - [ ] Add network error handling.
 - [ ] Add refresh logic.

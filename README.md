@@ -46,3 +46,7 @@ github-grid@walidozich/
 ## UI Placement Choice
 
 The grid will live in a top bar popup instead of the notification list. This keeps it pinned and easy to reopen without depending on transient GNOME notifications.
+
+## GitHub Data Choice
+
+The first version uses GitHub's public contributions endpoint and parses the returned SVG data. This avoids requiring a token for the MVP while still exposing the daily contribution counts we need for rendering.
