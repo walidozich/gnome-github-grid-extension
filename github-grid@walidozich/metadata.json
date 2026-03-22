@@ -1,0 +1,9 @@
+{
+  "uuid": "github-grid@walidozich",
+  "name": "GitHub Grid",
+  "description": "Shows a GitHub-style contribution grid for a configured account.",
+  "shell-version": [
+    "46"
+  ],
+  "settings-schema": "org.gnome.shell.extensions.github-grid"
+}
