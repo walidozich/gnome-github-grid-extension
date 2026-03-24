@@ -17,6 +17,7 @@ GNOME Shell extension that shows a GitHub-style contribution grid for a selected
 - `glib-compile-schemas`
 - `gnome-extensions`
 - `gjs`
+- GPL-3.0-or-later license for EGO submission compatibility
 
 ## Install From Source
 
@@ -72,6 +73,29 @@ Install the built bundle with:
 ```bash
 gnome-extensions install -f dist/github-grid@walidozich.shell-extension.zip
 ```
+
+## EGO Submission Notes
+
+The current upload-ready bundle target is:
+
+```text
+dist/github-grid@walidozich.shell-extension.zip
+```
+
+Submission preparation completed:
+
+- license switched to GPL-3.0-or-later
+- `metadata.json` includes a homepage URL
+- the pack script explicitly includes `contributions.js`
+- the bundle excludes repository-only files such as screenshots, tests, and the repo root documentation
+
+Before uploading to `extensions.gnome.org`, verify:
+
+1. `./scripts/package.sh`
+2. `unzip -l dist/github-grid@walidozich.shell-extension.zip`
+3. confirm the archive contains:
+   `metadata.json`, `extension.js`, `prefs.js`, `stylesheet.css`, `contributions.js`, and the schema XML
+4. upload the zip through the EGO upload form
 
 ## Development Workflow
 

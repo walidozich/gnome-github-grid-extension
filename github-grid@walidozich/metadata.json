@@ -2,10 +2,11 @@
   "uuid": "github-grid@walidozich",
   "name": "GitHub Grid",
   "description": "Shows a GitHub-style contribution grid for a configured account.",
-  "version": 1,
+  "version": 2,
   "shell-version": [
     "46",
     "49"
   ],
-  "settings-schema": "org.gnome.shell.extensions.github-grid"
+  "settings-schema": "org.gnome.shell.extensions.github-grid",
+  "url": "https://github.com/walidozich/gnome-github-grid-extension"
 }
