@@ -86,7 +86,7 @@ Submission preparation completed:
 
 - license switched to GPL-3.0-or-later
 - `metadata.json` includes a homepage URL
-- the pack script explicitly includes `contributions.js`
+- the pack script explicitly includes the contribution data modules
 - the bundle excludes repository-only files such as screenshots, tests, and the repo root documentation
 
 Before uploading to `extensions.gnome.org`, verify:
@@ -94,7 +94,7 @@ Before uploading to `extensions.gnome.org`, verify:
 1. `./scripts/package.sh`
 2. `unzip -l dist/github-grid@walidozich.shell-extension.zip`
 3. confirm the archive contains:
-   `metadata.json`, `extension.js`, `prefs.js`, `stylesheet.css`, `contributions.js`, and the schema XML
+   `metadata.json`, `extension.js`, `prefs.js`, `stylesheet.css`, `contributions.js`, `contributionData.js`, and the schema files
 4. upload the zip through the EGO upload form
 
 ## Development Workflow
@@ -174,6 +174,7 @@ tests/manual-runtime-checklist.md
 ```text
 github-grid@walidozich/
 ├── contributions.js
+├── contributionData.js
 ├── extension.js
 ├── metadata.json
 ├── prefs.js

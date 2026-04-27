@@ -10,7 +10,7 @@ import {
     parseContributionSvg,
     serializeCachedResult,
     summarizeContributions,
-} from '../github-grid@walidozich/contributions.js';
+} from '../github-grid@walidozich/contributionData.js';
 
 function assert(condition, message) {
     if (!condition)
