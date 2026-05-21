@@ -5,7 +5,8 @@
   "version": 2,
   "shell-version": [
     "46",
-    "49"
+    "49",
+    "50"
   ],
   "settings-schema": "org.gnome.shell.extensions.github-grid",
   "url": "https://github.com/walidozich/gnome-github-grid-extension"
